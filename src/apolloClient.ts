@@ -10,8 +10,11 @@ const cache = new InMemoryCache({
       fields: {
         launches: {
           keyArgs: false,
-          merge(existing = [], incoming) {
-            return [...existing, ...incoming];
+          merge(existing = { launches: [] }, incoming) {
+            return {
+              ...incoming,
+              launches: [...(existing.launches || []), ...incoming.launches],
+            };
           },
         },
       },

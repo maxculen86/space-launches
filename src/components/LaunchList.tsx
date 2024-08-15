@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery, gql } from '@apollo/client';
-import LaunchItem from './LaunchItem';
 
 export const GET_LAUNCHES = gql`
   query GetLaunches($after: String) {
@@ -9,12 +8,12 @@ export const GET_LAUNCHES = gql`
       hasMore
       launches {
         id
-        mission_name
-        rocket {
-          rocket_name
+        site
+        mission {
+          name
         }
-        launch_site {
-          site_name
+        rocket {
+          name
         }
       }
     }
@@ -23,49 +22,40 @@ export const GET_LAUNCHES = gql`
 
 interface Launch {
   id: string;
-  mission_name: string;
-  rocket: {
-    rocket_name: string;
+  site: string;
+  mission: {
+    name: string;
   };
-  launch_site: {
-    site_name: string;
+  rocket: {
+    name: string;
   };
 }
 
 const LaunchList: React.FC = () => {
-  const [hasMore, setHasMore] = useState(true);
-  const { loading, error, data, fetchMore } = useQuery(GET_LAUNCHES);
+  const { loading, error, data } = useQuery(GET_LAUNCHES);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (error) {
+    console.error('GraphQL Error:', error);
+    return <p>Error :( {error.message}</p>;
+  }
 
-  const launches: Launch[] = data?.launches?.launches || [];
+  console.log('Received data:', JSON.stringify(data, null, 2));
 
-  const loadMore = () => {
-    if (!hasMore) return;
-
-    fetchMore({
-      variables: {
-        after: data.launches.cursor,
-      },
-    }).then((fetchMoreResult) => {
-      setHasMore(fetchMoreResult.data.launches.hasMore);
-    });
-  };
-
-  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
-    const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
-    if (scrollHeight - scrollTop <= clientHeight * 1.5) {
-      loadMore();
-    }
-  };
+  if (!data || !data.launches || !Array.isArray(data.launches.launches)) {
+    console.error('Invalid data structure:', data);
+    return <p>Error: Invalid data structure</p>;
+  }
 
   return (
-    <div style={{ height: '400px', overflowY: 'auto' }} onScroll={handleScroll}>
-      {launches.map((launch) => (
-        <LaunchItem key={launch.id} launch={launch} />
+    <div>
+      {data.launches.launches.map((launch: Launch) => (
+        <div key={launch.id}>
+          <h3>{launch.mission.name}</h3>
+          <p>Rocket: {launch.rocket.name}</p>
+          <p>Launch Site: {launch.site}</p>
+        </div>
       ))}
-      {loading && <p>Loading more...</p>}
     </div>
   );
 };
