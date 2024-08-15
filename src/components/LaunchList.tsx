@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import LaunchItem from './LaunchItem';
 
-const GET_LAUNCHES = gql`
+export const GET_LAUNCHES = gql`
   query GetLaunches($after: String) {
     launches(after: $after) {
       cursor
