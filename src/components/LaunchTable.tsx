@@ -6,6 +6,13 @@ interface LaunchTableProps {
   launches: (Launch | null)[];
 }
 
+/**
+ * Renders a table of launches.
+ *
+ * @component
+ * @param {Object[]} launches - The array of launches to display in the table.
+ * @returns {JSX.Element} - The rendered table component.
+ */
 export const LaunchTable: React.FC<LaunchTableProps> = ({ launches }) => (
   <div className="overflow-x-auto">
     <table>

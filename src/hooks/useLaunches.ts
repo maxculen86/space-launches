@@ -1,10 +1,12 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useGetLaunchesQuery, GetLaunchesQuery } from '../generated/graphql';
+import { useGetLaunchesQuery, Launch } from '../generated/graphql';
 
-type LaunchItem = NonNullable<GetLaunchesQuery['launches']['launches'][number]>;
-
+/**
+ * Custom hook for fetching and managing space launches.
+ * @returns An object containing the launches, loading state, error state, whether there are more launches to load, and a function to load more launches.
+ */
 export const useLaunches = () => {
-  const [launches, setLaunches] = useState<LaunchItem[]>([]);
+  const [launches, setLaunches] = useState<Launch[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
 
@@ -15,7 +17,7 @@ export const useLaunches = () => {
 
   useEffect(() => {
     if (data?.launches.launches) {
-      setLaunches(data.launches.launches.filter((launch): launch is LaunchItem => launch !== null));
+      setLaunches(data.launches.launches.filter((launch): launch is Launch => launch !== null));
       setCursor(data.launches.cursor);
       setHasMore(data.launches.hasMore);
     }
@@ -27,7 +29,7 @@ export const useLaunches = () => {
         variables: { after: cursor },
       }).then((result) => {
         if (result.data?.launches.launches) {
-          setLaunches([...launches, ...result.data.launches.launches.filter((launch): launch is LaunchItem => launch !== null)]);
+          setLaunches([...launches, ...result.data.launches.launches.filter((launch): launch is Launch => launch !== null)]);
           setCursor(result.data.launches.cursor);
           setHasMore(result.data.launches.hasMore);
         }

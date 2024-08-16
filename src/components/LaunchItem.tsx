@@ -6,6 +6,13 @@ interface LaunchItemProps {
   isTableView: boolean;
 }
 
+/**
+ * Renders a single launch item.
+ * @param {Object} props - The component props.
+ * @param {Launch} props.launch - The launch object to display.
+ * @param {boolean} props.isTableView - Indicates whether the launch item should be rendered as a table row.
+ * @returns {JSX.Element} The rendered launch item.
+ */
 export const LaunchItem: React.FC<LaunchItemProps> = ({ launch, isTableView }) => {
   if (isTableView) {
     return (

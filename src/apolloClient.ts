@@ -23,6 +23,9 @@ const cache = new InMemoryCache({
   },
 });
 
+/**
+ * Apollo client instance.
+ */
 const client = new ApolloClient({
   link: httpLink,
   cache,

@@ -7,6 +7,11 @@ import { LaunchTable } from './LaunchTable';
 import { LaunchGrid } from './LaunchGrid';
 import { Launch } from '../generated/graphql';
 
+/**
+ * Renders a list of launches.
+ * 
+ * @returns The LaunchList component.
+ */
 const LaunchList: React.FC = () => {
   const { width } = useWindowSize();
   const isTableView = width >= 640;
