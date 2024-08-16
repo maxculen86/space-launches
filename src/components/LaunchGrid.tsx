@@ -13,7 +13,7 @@ interface LaunchGridProps {
  * @param {Object[]} launches - An array of launch objects.
  * @returns {JSX.Element} - The rendered grid of launch items.
  */
-export const LaunchGrid: React.FC<LaunchGridProps> = ({ launches }) => (
+export const LaunchGrid: React.FC<LaunchGridProps> = React.memo(({ launches }) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {launches.map((launch) => 
       launch && (
@@ -21,4 +21,4 @@ export const LaunchGrid: React.FC<LaunchGridProps> = ({ launches }) => (
       )
     )}
   </div>
-);
+));

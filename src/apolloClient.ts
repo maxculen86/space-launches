@@ -1,21 +1,39 @@
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
-import { GetLaunchesQuery } from './generated/graphql';
+import { ApolloClient, InMemoryCache, HttpLink, FieldFunctionOptions } from '@apollo/client';
+import { Launch } from './generated/graphql';
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_API_URL || 'https://apollo-fullstack-tutorial.herokuapp.com/graphql',
 });
 
+interface LaunchConnection {
+  cursor: string;
+  hasMore: boolean;
+  launches: Launch[];
+}
+
+/**
+ * Apollo client cache.
+ */
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
         launches: {
           keyArgs: false,
-          merge(existing: GetLaunchesQuery['launches'] | undefined, incoming: GetLaunchesQuery['launches']) {
-            return {
-              ...incoming,
-              launches: [...(existing?.launches || []), ...incoming.launches],
-            };
+          merge(
+            existing: LaunchConnection | undefined,
+            incoming: LaunchConnection,
+            options: FieldFunctionOptions<{ after?: string | null }>
+          ): LaunchConnection {
+            const merged = existing ? { ...existing } : { launches: [], cursor: '', hasMore: true };
+            if (options.args?.after) {
+              merged.launches = [...merged.launches, ...incoming.launches];
+            } else {
+              merged.launches = incoming.launches;
+            }
+            merged.cursor = incoming.cursor;
+            merged.hasMore = incoming.hasMore;
+            return merged;
           },
         },
       },
@@ -24,11 +42,17 @@ const cache = new InMemoryCache({
 });
 
 /**
- * Apollo client instance.
+ * Apollo Client instance for making GraphQL requests.
  */
 const client = new ApolloClient({
   link: httpLink,
   cache,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-first',
+    },
+  },
 });
 
 export default client;

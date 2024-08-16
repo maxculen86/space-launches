@@ -13,7 +13,7 @@ interface LaunchItemProps {
  * @param {boolean} props.isTableView - Indicates whether the launch item should be rendered as a table row.
  * @returns {JSX.Element} The rendered launch item.
  */
-export const LaunchItem: React.FC<LaunchItemProps> = ({ launch, isTableView }) => {
+export const LaunchItem: React.FC<LaunchItemProps> = React.memo(({ launch, isTableView }) => {
   if (isTableView) {
     return (
       <tr>
@@ -33,4 +33,4 @@ export const LaunchItem: React.FC<LaunchItemProps> = ({ launch, isTableView }) =
       <p className="text-gray-600">Launch Site: {launch.site ?? 'Unknown'}</p>
     </div>
   );
-};
+});

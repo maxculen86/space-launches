@@ -5,7 +5,7 @@ import LaunchList from './components/LaunchList';
 import './index.css';
 import './App.css';
 
-const App: React.FC = () => {
+const App: React.FC = React.memo(() => {
   return (
     <ApolloProvider client={client}>
       <div className="App">
@@ -18,6 +18,6 @@ const App: React.FC = () => {
       </div>
     </ApolloProvider>
   );
-};
+});
 
 export default App;
