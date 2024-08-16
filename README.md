@@ -8,7 +8,7 @@ This project is a React-based web application that displays information about sp
 - Supports both table and grid view layouts
 - Implements infinite scrolling to load more launches as the user scrolls
 - Uses GraphQL for efficient data fetching
-- Fully typed with TypeScript
+- Fully typed with TypeScript codegen
 - Responsive design for various screen sizes
 
 ## Technologies Used
@@ -17,6 +17,7 @@ This project is a React-based web application that displays information about sp
 - TypeScript
 - Apollo Client
 - GraphQL
+- Codegen
 - Vite (for build tooling)
 - Tailwind CSS (for styling)
 - Vitest (for testing)
@@ -27,6 +28,13 @@ Before you begin, ensure you have met the following requirements:
 
 - Node.js (v14.0.0 or later)
 - npm (v6.0.0 or later)
+
+## Live version
+
+- For checking live deployment demo go to 
+```
+https://main--space-launches-challenge.netlify.app/
+```
 
 ## Installation
 
@@ -52,9 +60,9 @@ To install the Space Launches project, follow these steps:
 1. Create a `.env` file in the root directory of the project.
 2. Add the following environment variable:
    ```
-   VITE_GRAPHQL_API_URL=https://your-graphql-api-url.com
+   VITE_GRAPHQL_API_URL=https://apollo-fullstack-tutorial.herokuapp.com/graphql
    ```
-   Replace `https://your-graphql-api-url.com` with the actual URL of your GraphQL API.
+   Replace `https://apollo-fullstack-tutorial.herokuapp.com/graphql` if you need to change the actual URL of your GraphQL API.
 
 ## Usage
 
@@ -85,26 +93,6 @@ To run the test suite:
 ```
 npm run test
 ```
-
-## Contributing
-
-Contributions to the Space Launches project are welcome. Please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch: `git checkout -b <branch_name>`.
-3. Make your changes and commit them: `git commit -m '<commit_message>'`
-4. Push to the original branch: `git push origin <project_name>/<location>`
-5. Create the pull request.
-
-Alternatively, see the GitHub documentation on [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
-
-## License
-
-This project is licensed under the [MIT License](LICENSE.md).
-
-## Contact
-
-If you want to contact me, you can reach me at `<your_email@example.com>`.
 
 ## Acknowledgements
 
