@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import LaunchList from './LaunchList';
-import { GET_LAUNCHES } from '../graphql/queries';
+import { GetLaunchesDocument, GetLaunchesQuery, GetLaunchesQueryVariables } from '../generated/graphql';
 
 // Mock IntersectionObserver
 class MockIntersectionObserver implements IntersectionObserver {
@@ -35,32 +35,33 @@ global.IntersectionObserver = MockIntersectionObserver as any;
 const mocks = [
   {
     request: {
-      query: GET_LAUNCHES,
-      variables: { after: null },
+      query: GetLaunchesDocument,
+      variables: { after: null } as GetLaunchesQueryVariables,
     },
     result: {
       data: {
         launches: {
+          __typename: 'LaunchConnection' as const,
           cursor: "1583556631",
           hasMore: true,
           launches: [
             {
-              __typename: 'Launch',
+              __typename: 'Launch' as const,
               id: "110",
               site: "KSC LC 39A",
-              mission: { __typename: 'Mission', name: "CRS-21" },
-              rocket: { __typename: 'Rocket', name: "Falcon 9" },
+              mission: { __typename: 'Mission' as const, name: "CRS-21" },
+              rocket: { __typename: 'Rocket' as const, name: "Falcon 9" },
             },
             {
-              __typename: 'Launch',
+              __typename: 'Launch' as const,
               id: "109",
               site: "CCAFS SLC 40",
-              mission: { __typename: 'Mission', name: "Starlink-15 (v1.0)" },
-              rocket: { __typename: 'Rocket', name: "Falcon 9" },
+              mission: { __typename: 'Mission' as const, name: "Starlink-15 (v1.0)" },
+              rocket: { __typename: 'Rocket' as const, name: "Falcon 9" },
             },
           ],
         },
-      },
+      } as GetLaunchesQuery,
     },
   },
 ];
@@ -95,8 +96,8 @@ describe('LaunchList', () => {
   it('handles error state', async () => {
     const errorMock = {
       request: {
-        query: GET_LAUNCHES,
-        variables: { after: null },
+        query: GetLaunchesDocument,
+        variables: { after: null } as GetLaunchesQueryVariables,
       },
       error: new Error('An error occurred'),
     };
@@ -107,7 +108,6 @@ describe('LaunchList', () => {
       </MockedProvider>
     );
 
-    // Wait for the error state and check for the presence of the error message
     const errorElement = await screen.findByText('Error: An error occurred');
     expect(errorElement).toBeInTheDocument();
   });

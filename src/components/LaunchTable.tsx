@@ -1,8 +1,12 @@
 import React from 'react';
-import { Launch } from '../types/types';
+import { Launch } from '../generated/graphql';
 import { LaunchItem } from './LaunchItem';
 
-export const LaunchTable: React.FC<{ launches: Launch[] }> = ({ launches }) => (
+interface LaunchTableProps {
+  launches: (Launch | null)[];
+}
+
+export const LaunchTable: React.FC<LaunchTableProps> = ({ launches }) => (
   <div className="overflow-x-auto">
     <table>
       <thead>
@@ -14,9 +18,11 @@ export const LaunchTable: React.FC<{ launches: Launch[] }> = ({ launches }) => (
         </tr>
       </thead>
       <tbody>
-        {launches.map((launch) => (
-          <LaunchItem key={launch.id} launch={launch} isTableView={true} />
-        ))}
+        {launches.map((launch) => 
+          launch && (
+            <LaunchItem key={launch.id} launch={launch} isTableView={true} />
+          )
+        )}
       </tbody>
     </table>
   </div>

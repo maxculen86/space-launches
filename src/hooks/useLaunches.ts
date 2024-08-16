@@ -1,21 +1,21 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_LAUNCHES } from '../graphql/queries';
-import { Launch } from '../types/types';
+import { useGetLaunchesQuery, GetLaunchesQuery } from '../generated/graphql';
+
+type LaunchItem = NonNullable<GetLaunchesQuery['launches']['launches'][number]>;
 
 export const useLaunches = () => {
-  const [launches, setLaunches] = useState<Launch[]>([]);
+  const [launches, setLaunches] = useState<LaunchItem[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
 
-  const { loading, error, data, fetchMore } = useQuery(GET_LAUNCHES, {
+  const { loading, error, data, fetchMore } = useGetLaunchesQuery({
     variables: { after: null },
     notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
-    if (data) {
-      setLaunches(data.launches.launches);
+    if (data?.launches.launches) {
+      setLaunches(data.launches.launches.filter((launch): launch is LaunchItem => launch !== null));
       setCursor(data.launches.cursor);
       setHasMore(data.launches.hasMore);
     }
@@ -25,21 +25,9 @@ export const useLaunches = () => {
     if (!loading && hasMore) {
       fetchMore({
         variables: { after: cursor },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
-          return {
-            launches: {
-              ...fetchMoreResult.launches,
-              launches: [
-                ...prev.launches.launches,
-                ...fetchMoreResult.launches.launches,
-              ],
-            },
-          };
-        },
       }).then((result) => {
-        if (result.data) {
-          setLaunches([...launches, ...result.data.launches.launches]);
+        if (result.data?.launches.launches) {
+          setLaunches([...launches, ...result.data.launches.launches.filter((launch): launch is LaunchItem => launch !== null)]);
           setCursor(result.data.launches.cursor);
           setHasMore(result.data.launches.hasMore);
         }

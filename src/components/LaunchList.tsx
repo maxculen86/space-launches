@@ -5,6 +5,7 @@ import { useWindowSize } from '../hooks/useWindowSize';
 import { useLaunches } from '../hooks/useLaunches';
 import { LaunchTable } from './LaunchTable';
 import { LaunchGrid } from './LaunchGrid';
+import { Launch } from '../generated/graphql';
 
 const LaunchList: React.FC = () => {
   const { width } = useWindowSize();
@@ -16,10 +17,10 @@ const LaunchList: React.FC = () => {
   });
 
   useEffect(() => {
-    if (inView) {
+    if (inView && hasMore) {
       loadMore();
     }
-  }, [inView, loadMore]);
+  }, [inView, loadMore, hasMore]);
 
   if (loading && launches.length === 0) {
     return <Spinner />;
@@ -31,9 +32,9 @@ const LaunchList: React.FC = () => {
       {launches.length === 0 ? (
         <p>No launches found.</p>
       ) : isTableView ? (
-        <LaunchTable launches={launches} />
+        <LaunchTable launches={launches as Launch[]} />
       ) : (
-        <LaunchGrid launches={launches} />
+        <LaunchGrid launches={launches as Launch[]} />
       )}
       {(loading || hasMore) && (
         <div ref={ref}>
