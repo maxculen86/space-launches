@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 
 const httpLink = new HttpLink({
-  uri: 'https://apollo-fullstack-tutorial.herokuapp.com/graphql',
+  uri: import.meta.env.VITE_GRAPHQL_API_URL || 'https://apollo-fullstack-tutorial.herokuapp.com/graphql',
 });
 
 const cache = new InMemoryCache({
